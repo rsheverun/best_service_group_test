@@ -14,18 +14,21 @@ import router from './router/index'
 import App from './components/App'
 import 'es6-promise/auto'
 import miniToastr from 'mini-toastr'
+import VeeValidate from 'vee-validate';
 
+Vue.use(VeeValidate, {
+  classes: true,
+  classNames: {
+    valid: 'is-valid',
+    invalid: 'is-invalid'
+  }
+});
 Vue.use(Vuex)
+
 miniToastr.init()
+
 Vue.prototype.axios = axios;
 Vue.prototype.miniToastr = miniToastr;
-/**
- * Next, we will create a fresh Vue application instance and attach it to
- * the page. Then, you may begin adding components to this application
- * or customize the JavaScript scaffolding to fit your unique needs.
- */
-
-Vue.component('example-component', require('./components/ExampleComponent.vue'));
 
 axios.defaults.headers.common = {
   'Authorization': 'Bearer ' + localStorage.getItem('token')
@@ -52,13 +55,28 @@ const user = {
   },
   actions: {
     login(context, data) {
-      axios.post('api/login', data) 
-      .then(response => {
+      axios.post('api/login', {
+        email: data.email,
+        password: data.password,
+        username: data.username
+      }) .then(response => {
         if (response.status == 200)
           context.commit('setToken', response.data.token)
       })
       .catch(error => {
-        miniToastr.error(error.response.data.message)
+        console.log(error.response.status)
+            if (error.response.status == 422) {
+              let errors = error.response.data.errors
+              console.log(error.response.data.errors)
+              for (var item in errors) {
+                console.log(item, errors)
+                for (var i in errors[item]) {
+                  miniToastr.error(errors[item][i], 'Error')
+                }
+              }
+            } else {
+              miniToastr.error(error.response.data.message)
+            }
       })
     },
     logout(context,data) {
@@ -121,9 +139,10 @@ const actor = {
       .catch(error => {
             miniToastr.error(error.response.data.message)
         })
-    },
+    }
   }
 }
+
 const store = new Vuex.Store({
     modules: {
       actor: actor,

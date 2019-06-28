@@ -6,8 +6,11 @@
                     <button class="btn btn-primary" @click="logout()">Log Out</button>
                 </div>
             </div>
-            <select v-model="data.selectedCategory"  class="form-control mb-4" @change="getActorsFromCategory">
-                <option value="null">*Please select a film category</option>
+            <select v-model="data.selectedCategory" class="form-control mb-4" 
+                name="category"
+                @change="getActorsFromCategory"
+            >
+                <option value="">*Please select a film category</option>
                 <option v-for="category in categories" :value="category.category_id">{{category.name}}</option>
             </select>
             <div v-if="data.selectedCategory">
@@ -32,10 +35,14 @@
                         <nav aria-label="Page navigation example">
                             <ul class="pagination justify-content-center">
                                 <li class="page-item"  :class="{disabled:prevDisabled}">
-                                    <a class="page-link" href="#" @click="changePage('prev')">Previous</a>
+                                    <a class="page-link" href="#" 
+                                        @click="changePage('prev')"
+                                    >Previous</a>
                                 </li>
                                 <li class="page-item" :class="{disabled:nextDisabled}">
-                                    <a class="page-link" href="#" @click="changePage('next')">Next</a>
+                                    <a class="page-link" href="#" 
+                                        @click="changePage('next')"
+                                    >Next</a>
                                 </li>
                             </ul>
                         </nav>
@@ -52,7 +59,7 @@
         data() {
             return {
                 data: {
-                    selectedCategory: null,
+                    selectedCategory: '',
                     page: 1,
                     perPage: 10,
                 },
@@ -80,13 +87,17 @@
                         this.prevDisabled = true
                     } else {
                         this.prevDisabled = false
+                        this.nextDisabled = true
                     }
                     if (
                         (value.page*this.data.perPage) + this.data.perPage > this.count 
                         && this.count != ''
-                        )
+                    ) {
                         this.nextDisabled = true
-                    
+                    } else {
+                        this.nextDisabled = false
+                    }
+
                 }, deep: true
             },
         },
@@ -99,7 +110,8 @@
             },
 
             getActorsFromCategory() {
-                this.$store.dispatch('getActorsFromCategory', this.data)
+                if (this.data.selectedCategory != '')
+                    this.$store.dispatch('getActorsFromCategory', this.data)
                 
             },
 

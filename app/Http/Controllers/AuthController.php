@@ -3,10 +3,16 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Requests\ApiLoginRequest;
 
 class AuthController extends Controller
 {
-    public function login(Request $request)
+    /**
+     * Login
+     * @param App\Http\Requests\ApiLoginRequest $request
+     * @return json $token
+     */
+    public function login(ApiLoginRequest $request)
     {
         $credentials = [
             'password' => $request->password
@@ -24,6 +30,11 @@ class AuthController extends Controller
         }
     }
 
+    /**
+     * Logout
+     * @param Illuminate\Http\Request $request
+     * @return json message
+     */
     public function logout(Request $request)
     {
         auth('api')->user()->token()->revoke();

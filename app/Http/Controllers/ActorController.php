@@ -9,6 +9,13 @@ use App\Http\Requests\ApiGetActorsRequest;
 
 class ActorController extends Controller
 {
+    /**
+     * Get a list of actors for certain movie categories
+     * 
+     * @param App\Http\Requests\ApiGetActorsRequest $request
+     * @return array App\Http\Resources\Actor
+     * @return integer count
+     */
     public function __invoke(ApiGetActorsRequest $request)
     {
         $actors = Actor::with('films')->whereHas('films', function($query) use ($request) {
@@ -20,7 +27,6 @@ class ActorController extends Controller
         ->withCount('films')
         ->orderBy('films_count', 'desc');
         
-        // ->sortByDesc('films_count');
 
         return response([
             'count' => $actors->count(),
@@ -28,6 +34,7 @@ class ActorController extends Controller
                 $actors->offset($request->page * $request->perPage)
                         ->limit($request->perPage)
                         ->get()
+                         // ->sortByDesc('films_count')
                 ),
             
         ]);

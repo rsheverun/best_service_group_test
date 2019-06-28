@@ -24,6 +24,7 @@
         "es6-promise": "^4.2.8",
         "mini-toastr": "^0.8.1",
         "popper.js": "^1.15.0",
+        "vee-validate": "^2.2.11",
         "vue-router": "^3.0.6",
         "vuex": "^3.1.1"
     }

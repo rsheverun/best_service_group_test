@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ApiGetActorsRequest extends FormRequest
+class ApiLoginRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -29,14 +29,11 @@ class ApiGetActorsRequest extends FormRequest
     public function rules()
     {
         return [
-            'category_id' => 'required|integer'
+            'email' => 'required_if:username,'.null,
+            'username' => 'required_if:email,'.null,
+            'password' => 'required'
         ];
     }
 
-    public function attributes()
-    {
-        return [
-            'category_id' => 'film category'
-        ];
-    }
+    
 }
