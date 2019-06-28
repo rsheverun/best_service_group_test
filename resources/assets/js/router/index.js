@@ -8,7 +8,7 @@ const Login = () => System.import('../components/LoginComponent.vue')
 const Dashboard = () => System.import('../components/DashboardComponent.vue')
 
 export default new Router({
-    mode: 'hash', // https://router.vuejs.org/api/#mode
+    mode: 'history', // https://router.vuejs.org/api/#mode
     linkActiveClass: 'open active',
     scrollBehavior: () => ({ y: 0 }),
     routes: [
