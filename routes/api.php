@@ -17,5 +17,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::post('get/actors', 'ActorController');
+Route::post('login', 'AuthController@login');
+
+Route::post('get/actors', 'ActorController')->middleware('auth:api');
 Route::get('get/categories', 'CategoryController@index');
+Route::post('logout', 'AuthController@logout');

@@ -18,13 +18,19 @@ class ActorController extends Controller
                 });
         })
         ->withCount('films')
-        ->offset($request->page * $request->perPage)
-        ->limit($request->perPage)
-        ->orderBy('films_count', 'desc')
-        ->get();
+        ->orderBy('films_count', 'desc');
+        
         // ->sortByDesc('films_count');
 
-        return response(ActorResource::collection($actors));
+        return response([
+            'count' => $actors->count(),
+            'list' => ActorResource::collection(
+                $actors->offset($request->page * $request->perPage)
+                        ->limit($request->perPage)
+                        ->get()
+                ),
+            
+        ]);
 
     }
 }
